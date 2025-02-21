@@ -82,8 +82,11 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (p *Proxy) CreateProxyRequest(r *http.Request, target *url.URL) *http.Request {
 	outURL := *target // Начинаем с базового backend URL
 
-	// Заменяем путь, чтобы он был только с той частью, что идет после /api/users/
-	outURL.Path = strings.TrimSuffix(target.Path, "/") + strings.TrimPrefix(r.URL.Path, "/api/users")
+	idx := strings.Index(r.URL.Path, target.Path)
+	if idx != -1 {
+		outURL.Path = r.URL.Path[idx:]
+	}
+
 	// Объединяем query параметры
 	if r.URL.RawQuery != "" && target.RawQuery != "" {
 		outURL.RawQuery = r.URL.RawQuery + "&" + target.RawQuery
