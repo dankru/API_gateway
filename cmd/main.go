@@ -25,7 +25,7 @@ func main() {
 	rateLimiter := middleware.NewSlidingWindowLimiter(time.Minute, 100)
 
 	proxyHandler.AddRoute("/api/users/", "http://localhost:8080/users/")
-	proxyHandler.AddRoute("/auth/", "http://localhost:8080/auth/")
+	proxyHandler.AddRoute("/auth/", "http://localhost:8081/auth/")
 
 	handler := rateLimiter.Middleware(proxyHandler)
 	server := &http.Server{
